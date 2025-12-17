@@ -7,10 +7,10 @@ import { useEffect, useRef, useState, useCallback } from "react"
 // Dictionary of common words
 const DICTIONARY = [
   "the",
+  "and",
   "be",
   "to",
   "of",
-  "and",
   "a",
   "in",
   "that",
