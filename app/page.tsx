@@ -98,8 +98,8 @@ export default function Desktop() {
       </div>
 
       {/* WatType Application Window */}
-      <WatTypeWindow 
-        isOpen={isWindowVisible} 
+      <WatTypeWindow
+        isOpen={isWindowVisible}
         onClose={() => {
           setIsWindowRunning(false)
           setIsWindowMinimized(false)
@@ -108,20 +108,27 @@ export default function Desktop() {
       />
 
       {/* Windows XP Login Dialog */}
-      <Login 
-        isLoginOpen={isLoginOpen} 
-        onClose={() => setIsLoginOpen(false)} 
+      <Login
+        isLoginOpen={isLoginOpen}
+        onClose={() => setIsLoginOpen(false)}
         onLogin={handleLogin}
       />
 
       {/* Taskbar */}
-      <TaskBar 
-        onStartClick={() => setIsLoginOpen(true)} 
+      <TaskBar
+        onStartClick={() => setIsLoginOpen(true)}
         currentTime={currentTime}
         loggedInUser={loggedInUser}
         isWatTypeRunning={isWindowRunning}
         isWatTypeMinimized={isWindowMinimized}
-        onWatTypeClick={() => setIsWindowMinimized(!isWindowMinimized)}
+        onWatTypeClick={() => {
+          if (!isWindowRunning) {
+            setIsWindowRunning(true)
+            setIsWindowMinimized(false)
+          } else {
+            setIsWindowMinimized(!isWindowMinimized)
+          }
+        }}
       />
     </div>
   )
