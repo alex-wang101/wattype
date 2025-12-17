@@ -1,0 +1,87 @@
+interface TaskBarProps {
+  onStartClick: () => void
+  currentTime: string
+  loggedInUser?: string
+  isWatTypeRunning: boolean
+  isWatTypeMinimized: boolean
+  onWatTypeClick: () => void
+}
+
+export function TaskBar({ 
+  onStartClick, 
+  currentTime, 
+  loggedInUser,
+  isWatTypeRunning,
+  isWatTypeMinimized,
+  onWatTypeClick
+}: TaskBarProps) {
+  return (
+    <div className="bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 h-10 flex items-center px-1 border-t-2 border-blue-400 z-20">
+      <button 
+        onClick={onStartClick}
+        className="flex items-center gap-2 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 text-white font-bold px-4 py-1 rounded-r-lg text-sm shadow-md border border-green-400"
+      >
+        <span className="text-lg">🪟</span>
+        <span>Start</span>
+      </button>
+
+      <div className="h-6 w-px bg-blue-400 mx-2" />
+
+      {/* Running applications */}
+      <div className="flex-1 flex items-center gap-1 px-2">
+        {isWatTypeRunning && (
+          <button
+            onClick={onWatTypeClick}
+            className={`flex items-center gap-2 px-2 py-1 min-w-[140px] transition-colors ${
+              !isWatTypeMinimized 
+                ? 'window-border-sm bg-blue-900 shadow-inner' 
+                : 'bg-blue-700/50 hover:bg-blue-600/50 border border-blue-500'
+            }`}
+          >
+            {/* Windows XP style icon container */}
+            <div className="window-border-sm bg-gray-200 p-1 rounded flex-shrink-0">
+              {/* Golden-yellow square with rounded corners */}
+              <div className="w-6 h-6 bg-gradient-to-br from-yellow-400 via-yellow-500 to-yellow-600 rounded flex items-center justify-center border border-yellow-300">
+                {/* Keyboard icon - smaller version */}
+                <svg 
+                  width="16" 
+                  height="12" 
+                  viewBox="0 0 32 24" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="text-white"
+                >
+                  <rect x="2" y="8" width="28" height="14" rx="1" fill="currentColor" opacity="0.9"/>
+                  <rect x="3" y="10" width="3" height="2" fill="white"/>
+                  <rect x="7" y="10" width="3" height="2" fill="white"/>
+                  <rect x="11" y="10" width="3" height="2" fill="white"/>
+                  <rect x="15" y="10" width="3" height="2" fill="white"/>
+                  <rect x="19" y="10" width="3" height="2" fill="white"/>
+                  <rect x="23" y="10" width="3" height="2" fill="white"/>
+                  <rect x="27" y="10" width="3" height="2" fill="white"/>
+                  <rect x="5" y="15" width="22" height="3" rx="0.5" fill="white"/>
+                </svg>
+              </div>
+            </div>
+            <span className="text-white text-xs font-sans">WatType!</span>
+            {/* Dot indicator when window is visible */}
+            {!isWatTypeMinimized && (
+              <div className="w-1.5 h-1.5 bg-blue-300 rounded-full ml-auto" />
+            )}
+          </button>
+        )}
+        {loggedInUser && !isWatTypeRunning && (
+          <span className="text-white text-xs font-mono">
+            Welcome, {loggedInUser}
+          </span>
+        )}
+      </div>
+
+      <div className="flex items-center gap-2 bg-blue-900/50 px-3 py-1 text-white text-xs font-mono border-l border-blue-400">
+        <span>🔊</span>
+        <span>🔌</span>
+        <span>{currentTime}</span>
+      </div>
+    </div>
+  )
+}

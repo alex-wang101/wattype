@@ -356,3 +356,212 @@
 .restart-button:active {
   opacity: 0.8;
 }
+.xp-login-dialog {
+  width: 460px;
+  border: 3px solid #0052cc;
+  border-radius: 8px;
+  font-family: Tahoma, Arial, sans-serif;
+  overflow: hidden;
+}
+
+.xp-login-titlebar {
+  background: linear-gradient(to right, #0a246a, #0052cc, #6699ff, #0052cc, #0a246a);
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.xp-login-titlebar-text {
+  color: white;
+  font-weight: bold;
+  font-size: 11px;
+  letter-spacing: 0.025em;
+}
+
+.xp-login-close-btn {
+  width: 21px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  background: linear-gradient(to bottom, #c85050, #b33a3a);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  box-shadow: inset 1px 1px 0 #ff8080, inset -1px -1px 0 #802020;
+  cursor: pointer;
+}
+
+.xp-login-close-btn:hover {
+  background: linear-gradient(to bottom, #d86060, #c34a4a);
+}
+
+.xp-login-banner {
+  background: linear-gradient(to bottom, #3a6ea5, #6699ff 30%, #4a8cd8 70%, #2a5a8a);
+  height: 90px;
+  position: relative;
+  overflow: hidden;
+}
+
+.xp-logo-squares {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.xp-logo-row {
+  display: flex;
+  gap: 2px;
+}
+
+.xp-logo-square {
+  width: 14px;
+  height: 14px;
+  transform: skewX(-10deg);
+}
+
+.xp-logo-red { background-color: #ff6b35; }
+.xp-logo-green { background-color: #52b552; }
+.xp-logo-blue { background-color: #0052cc; }
+.xp-logo-yellow { background-color: #ffb81c; }
+
+.xp-windows-text {
+  position: absolute;
+  left: 48px;
+  top: 8px;
+  display: flex;
+  align-items: baseline;
+  font-family: Arial, sans-serif;
+}
+
+.xp-microsoft-label {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10px;
+  margin-right: 4px;
+}
+
+.xp-windows-label {
+  color: white;
+  font-weight: bold;
+  font-size: 28px;
+  letter-spacing: -0.025em;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.xp-xp-label {
+  color: white;
+  font-weight: 300;
+  font-size: 18px;
+  font-style: italic;
+  margin-left: 2px;
+}
+
+.xp-edition-text {
+  position: absolute;
+  left: 52px;
+  top: 38px;
+  color: white;
+  font-size: 13px;
+  font-family: Arial, sans-serif;
+}
+
+.xp-copyright {
+  position: absolute;
+  left: 8px;
+  bottom: 4px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 9px;
+  font-family: Tahoma, sans-serif;
+}
+
+.xp-microsoft-italic {
+  position: absolute;
+  right: 12px;
+  bottom: 8px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  font-style: italic;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
+
+.xp-login-form {
+  background-color: #c0c0c0;
+  border-top: 2px solid #808080;
+  padding: 20px 24px;
+}
+
+.xp-form-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.xp-form-row:last-child {
+  margin-bottom: 0;
+}
+
+.xp-form-label {
+  width: 70px;
+  font-size: 11px;
+  color: black;
+  font-family: Tahoma, sans-serif;
+}
+
+.xp-form-input {
+  flex: 1;
+  font-size: 11px;
+  padding: 2px 4px;
+  font-family: Tahoma, sans-serif;
+  border: 1px solid #7f9db9;
+  background-color: white;
+  outline: none;
+}
+
+.xp-form-input:focus {
+  border-color: #0054e3;
+}
+
+.xp-button-row {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 24px;
+}
+
+.xp-button {
+  font-size: 11px;
+  padding: 3px 16px;
+  min-width: 75px;
+  font-family: Tahoma, sans-serif;
+  background-color: #ece9d8;
+  border: 1px solid #aca899;
+  border-radius: 3px;
+  box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080;
+  cursor: pointer;
+}
+
+.xp-button:hover {
+  background-color: #f5f3ea;
+}
+
+.xp-button:active {
+  box-shadow: inset -1px -1px 0 #ffffff, inset 1px 1px 0 #808080;
+}
+
+.xp-button-primary {
+  border: 1px solid #003c74;
+  box-shadow: inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 0 0 0 1px #0054e3;
+}
+
+.xp-button-small {
+  min-width: auto;
+  padding: 3px 12px;
+}
