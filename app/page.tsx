@@ -6,189 +6,24 @@ import { useEffect, useRef, useState, useCallback } from "react"
 
 // Dictionary of common words
 const DICTIONARY = [
-  "the",
-  "and",
-  "be",
-  "to",
-  "of",
-  "a",
-  "in",
-  "that",
-  "have",
-  "it",
-  "for",
-  "not",
-  "on",
-  "with",
-  "he",
-  "as",
-  "you",
-  "do",
-  "at",
-  "this",
-  "but",
-  "his",
-  "by",
-  "from",
-  "they",
-  "we",
-  "say",
-  "her",
-  "she",
-  "or",
-  "an",
-  "will",
-  "my",
-  "one",
-  "all",
-  "would",
-  "there",
-  "their",
-  "what",
-  "so",
-  "up",
-  "out",
-  "if",
-  "about",
-  "who",
-  "get",
-  "which",
-  "go",
-  "me",
-  "when",
-  "make",
-  "can",
-  "like",
-  "time",
-  "no",
-  "just",
-  "him",
-  "know",
-  "take",
-  "people",
-  "into",
-  "year",
-  "your",
-  "good",
-  "some",
-  "could",
-  "them",
-  "see",
-  "other",
-  "than",
-  "then",
-  "now",
-  "look",
-  "only",
-  "come",
-  "its",
-  "over",
-  "think",
-  "also",
-  "back",
-  "after",
-  "use",
-  "two",
-  "how",
-  "our",
-  "work",
-  "first",
-  "well",
-  "way",
-  "even",
-  "new",
-  "want",
-  "because",
-  "any",
-  "these",
-  "give",
-  "day",
-  "most",
-  "us",
-  "is",
-  "was",
-  "are",
-  "been",
-  "has",
-  "had",
-  "were",
-  "said",
-  "did",
-  "having",
-  "may",
-  "should",
-  "find",
-  "long",
-  "down",
-  "little",
-  "world",
-  "still",
-  "own",
-  "see",
-  "man",
-  "here",
-  "thing",
-  "give",
-  "many",
-  "well",
-  "only",
-  "those",
-  "tell",
-  "very",
-  "her",
-  "much",
-  "before",
-  "through",
-  "back",
-  "years",
-  "where",
-  "much",
-  "your",
-  "way",
-  "well",
-  "down",
-  "should",
-  "because",
-  "each",
-  "just",
-  "those",
-  "people",
-  "take",
-  "day",
-  "good",
-  "how",
-  "long",
-  "little",
-  "own",
-  "other",
-  "old",
-  "right",
-  "big",
-  "high",
-  "different",
-  "small",
-  "large",
-  "next",
-  "early",
-  "young",
-  "important",
-  "few",
-  "public",
-  "bad",
-  "same",
-  "able",
-  "woman",
-  "plan",
-  "report",
-  "better",
-  "best",
-  "however",
-  "lead",
-  "social",
-  "only",
+  "the", "and", "be", "to", "of", "a", "in", "that", "have", "it",
+  "for", "not", "on", "with", "he", "as", "you", "do", "at", "this",
+  "but", "his", "by", "from", "they", "we", "say", "her", "she", "or",
+  "an", "will", "my", "one", "all", "would", "there", "their", "what", "so",
+  "up", "out", "if", "about", "who", "get", "which", "go", "me", "when",
+  "make", "can", "like", "time", "no", "just", "him", "know", "take", "people",
+  "into", "year", "your", "good", "some", "could", "them", "see", "other", "than",
+  "then", "now", "look", "only", "come", "its", "over", "think", "also", "back",
+  "after", "use", "two", "how", "our", "work", "first", "well", "way", "even",
+  "new", "want", "because", "any", "these", "give", "day", "most", "us", "is",
+  "was", "are", "been", "has", "had", "were", "said", "did", "having", "may",
+  "should", "find", "long", "down", "little", "world", "still", "own", "man", "here",
+  "thing", "many", "tell", "very", "much", "before", "through", "years", "where", "each",
+  "old", "right", "big", "high", "different", "small", "large", "next", "early", "young",
+  "important", "few", "public", "bad", "same", "able", "woman", "plan", "report", "better",
+  "best", "however", "lead", "social",
 ]
 
-// Simple seeded random number generator
 function seededRandom(seed: number) {
   let value = seed
   return () => {
@@ -197,7 +32,6 @@ function seededRandom(seed: number) {
   }
 }
 
-// Generate word list from dictionary with seed
 function generateWords(seed: number, count: number): string {
   const rng = seededRandom(seed)
   const words: string[] = []
@@ -208,11 +42,9 @@ function generateWords(seed: number, count: number): string {
   return words.join(" ")
 }
 
-function checkifWordIsCorrect(typedWord: string, targetWord: string) {
-  return typedWord === targetWord
-}
-
 export default function TypingTest() {
+  const [isWindowOpen, setIsWindowOpen] = useState(false)
+  const [isMaximized, setIsMaximized] = useState(false)
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1000000))
   const [targetText, setTargetText] = useState("")
   const [typedWords, setTypedWords] = useState<string[]>([])
@@ -225,21 +57,101 @@ export default function TypingTest() {
   const startTimeRef = useRef<number>(0)
   const animationFrameRef = useRef<number | undefined>(undefined)
 
+  // Window position and size
+  const [windowPos, setWindowPos] = useState({ x: 100, y: 50 })
+  const [windowSize, setWindowSize] = useState({ width: 900, height: 650 })
+  const [isDragging, setIsDragging] = useState(false)
+  const [isResizing, setIsResizing] = useState<string | null>(null)
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 })
+  const windowRef = useRef<HTMLDivElement>(null)
+
   // Initialize target text on mount
   useEffect(() => {
     setTargetText(generateWords(seed, 120))
   }, [seed])
 
-  // Focus input on mount and after restart
+  // Center window on first open
   useEffect(() => {
-    inputRef.current?.focus()
-  }, [seed])
+    if (isWindowOpen && typeof window !== 'undefined') {
+      const centerX = (window.innerWidth - windowSize.width) / 2
+      const centerY = (window.innerHeight - windowSize.height - 40) / 2
+      setWindowPos({ x: Math.max(0, centerX), y: Math.max(0, centerY) })
+    }
+  }, [isWindowOpen])
+
+  // Focus input when window opens
+  useEffect(() => {
+    if (isWindowOpen) {
+      inputRef.current?.focus()
+    }
+  }, [isWindowOpen, seed])
+
+  // Handle mouse move for dragging and resizing
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (isDragging && !isMaximized) {
+        const newX = e.clientX - dragOffset.x
+        const newY = e.clientY - dragOffset.y
+        setWindowPos({
+          x: Math.max(0, Math.min(newX, window.innerWidth - 100)),
+          y: Math.max(0, Math.min(newY, window.innerHeight - 100))
+        })
+      }
+      
+      if (isResizing && !isMaximized) {
+        const minWidth = 600
+        const minHeight = 400
+        
+        if (isResizing.includes('e')) {
+          const newWidth = Math.max(minWidth, e.clientX - windowPos.x)
+          setWindowSize(prev => ({ ...prev, width: newWidth }))
+        }
+        if (isResizing.includes('w')) {
+          const newWidth = Math.max(minWidth, windowPos.x + windowSize.width - e.clientX)
+          const newX = e.clientX
+          if (newWidth >= minWidth) {
+            setWindowSize(prev => ({ ...prev, width: newWidth }))
+            setWindowPos(prev => ({ ...prev, x: newX }))
+          }
+        }
+        if (isResizing.includes('s')) {
+          const newHeight = Math.max(minHeight, e.clientY - windowPos.y)
+          setWindowSize(prev => ({ ...prev, height: newHeight }))
+        }
+        if (isResizing.includes('n')) {
+          const newHeight = Math.max(minHeight, windowPos.y + windowSize.height - e.clientY)
+          const newY = e.clientY
+          if (newHeight >= minHeight) {
+            setWindowSize(prev => ({ ...prev, height: newHeight }))
+            setWindowPos(prev => ({ ...prev, y: newY }))
+          }
+        }
+      }
+    }
+
+    const handleMouseUp = () => {
+      setIsDragging(false)
+      setIsResizing(null)
+    }
+
+    if (isDragging || isResizing) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      document.body.style.userSelect = 'none'
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.userSelect = ''
+    }
+  }, [isDragging, isResizing, dragOffset, windowPos, windowSize, isMaximized])
 
   useEffect(() => {
     if (isFinished || !hasStarted) return
 
     startTimeRef.current = Date.now()
-    const duration = 30000 // 30 seconds in milliseconds
+    const duration = 30000
     const endTime = startTimeRef.current + duration
 
     const updateTimer = () => {
@@ -274,16 +186,14 @@ export default function TypingTest() {
       setHasStarted(true)
     }
 
-    // If the last character is a space, save word and move to next
     if (value.endsWith(" ")) {
-      const wordTyped = value.trim() // remove the space
+      const wordTyped = value.trim()
       setTypedWords((prev) => [...prev, wordTyped])
       setCurrentWordIndex((prev) => prev + 1)
       setCurrentWord("")
       return
     }
 
-    // Update currentWord as user types
     setCurrentWord(value)
   }
 
@@ -298,28 +208,59 @@ export default function TypingTest() {
     setHasStarted(false)
   }, [])
 
+  const openWindow = () => {
+    setIsWindowOpen(true)
+    restart()
+  }
+
+  const closeWindow = () => {
+    setIsWindowOpen(false)
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+    }
+    setTypedWords([])
+    setCurrentWord("")
+    setCurrentWordIndex(0)
+    setTimeLeft(30)
+    setIsFinished(false)
+    setHasStarted(false)
+  }
+
+  const handleTitleBarMouseDown = (e: React.MouseEvent) => {
+    if (isMaximized) return
+    setIsDragging(true)
+    setDragOffset({
+      x: e.clientX - windowPos.x,
+      y: e.clientY - windowPos.y
+    })
+  }
+
+  const handleResizeMouseDown = (direction: string) => (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsResizing(direction)
+  }
+
+  const toggleMaximize = () => {
+    setIsMaximized(!isMaximized)
+  }
+
   const targetWordsArray = targetText.split(" ")
-  
-  // Calculate stats based on completed words + current word
   const elapsedSeconds = hasStarted && !isFinished ? 30 - timeLeft : 30
   
-  // Count correct characters across all typed words
   let correctChars = 0
   let totalChars = 0
   
-  // Check completed words
   for (let i = 0; i < typedWords.length; i++) {
     const typed = typedWords[i]
     const target = targetWordsArray[i] || ""
-    totalChars += typed.length + 1 // +1 for space
+    totalChars += typed.length + 1
     for (let j = 0; j < typed.length; j++) {
       if (typed[j] === target[j]) correctChars++
     }
-    // Count space as correct if word was completed
     correctChars++
   }
   
-  // Check current word being typed
   const currentTargetWord = targetWordsArray[currentWordIndex] || ""
   for (let j = 0; j < currentWord.length; j++) {
     totalChars++
@@ -339,22 +280,19 @@ export default function TypingTest() {
 
   const renderTargetText = () => {
     return targetWordsArray.map((word, wordIndex) => {
-      // Determine if this word has been typed, is current, or is upcoming
       const isCompleted = wordIndex < currentWordIndex
       const isCurrent = wordIndex === currentWordIndex
       const typedWordForThis = isCompleted ? typedWords[wordIndex] : isCurrent ? currentWord : ""
       
       const wordChars = word.split("").map((char, charIndexInWord) => {
-        let className = "text-gray-500" // default: not yet typed
+        let className = "text-gray-500"
         
         if (isCompleted || isCurrent) {
           if (charIndexInWord < typedWordForThis.length) {
-            // Character has been typed
             className = typedWordForThis[charIndexInWord] === char ? "text-green-400" : "text-red-400"
           }
         }
         
-        // Show caret at current typing position
         const isCaret = isCurrent && charIndexInWord === currentWord.length
 
         return (
@@ -365,7 +303,6 @@ export default function TypingTest() {
         )
       })
 
-      // Show caret after word if user typed more chars than target word has
       const caretAfterWord = isCurrent && currentWord.length >= word.length
 
       return (
@@ -382,55 +319,102 @@ export default function TypingTest() {
     })
   }
 
+  const [currentTime, setCurrentTime] = useState("")
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date()
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }))
+    }
+    updateTime()
+    const interval = setInterval(updateTime, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
   return (
-    <div className="min-h-screen bg-desktop-bg flex flex-col">
-      <div className="flex justify-end items-center gap-3 px-4 py-2 text-xs font-mono">
-        <a href="#" className="text-gray-400 hover:text-waterloo-gold">
-          Sign up
-        </a>
-        <span className="text-gray-600">|</span>
-        <a href="#" className="text-gray-400 hover:text-waterloo-gold">
-          Log in
-        </a>
-        <span className="text-gray-600">|</span>
-        <a href="#" className="text-gray-400 hover:text-waterloo-gold">
-          Excel theme
-        </a>
-        <select className="bg-charcoal text-gray-300 border border-gray-600 px-2 py-0.5 text-xs font-mono">
-          <option>Proverb</option>
-        </select>
+    <div className="min-h-screen bg-desktop-bg flex flex-col relative overflow-hidden">
+      {/* Desktop Icons */}
+      <div className="flex-1 p-4">
+        <div className="flex flex-col gap-4">
+          <button
+            onDoubleClick={openWindow}
+            className="flex flex-col items-center gap-1 p-2 rounded hover:bg-white/10 w-20 group"
+          >
+            <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded shadow-lg flex items-center justify-center text-2xl border-2 border-yellow-300">
+              ⌨️
+            </div>
+            <span className="text-white text-xs font-mono text-center drop-shadow-[0_1px_1px_rgba(0,0,0,0.8)] group-hover:bg-blue-600 px-1">
+              WatType!
+            </span>
+          </button>
+        </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-5xl">
-          {/* Window */}
-          <div className="window-border bg-steel-gray">
+      {/* Application Window */}
+      {isWindowOpen && (
+        <div
+          ref={windowRef}
+          className="absolute z-10"
+          style={isMaximized ? {
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 40,
+            width: '100%',
+            height: 'calc(100vh - 40px)',
+          } : {
+            left: windowPos.x,
+            top: windowPos.y,
+            width: windowSize.width,
+            height: windowSize.height,
+          }}
+        >
+          <div className="window-border bg-steel-gray shadow-2xl h-full flex flex-col relative">
+            {/* Resize handles */}
+            {!isMaximized && (
+              <>
+                <div className="absolute -top-1 left-2 right-2 h-2 cursor-n-resize" onMouseDown={handleResizeMouseDown('n')} />
+                <div className="absolute -bottom-1 left-2 right-2 h-2 cursor-s-resize" onMouseDown={handleResizeMouseDown('s')} />
+                <div className="absolute top-2 -left-1 w-2 bottom-2 cursor-w-resize" onMouseDown={handleResizeMouseDown('w')} />
+                <div className="absolute top-2 -right-1 w-2 bottom-2 cursor-e-resize" onMouseDown={handleResizeMouseDown('e')} />
+                <div className="absolute -top-1 -left-1 w-4 h-4 cursor-nw-resize" onMouseDown={handleResizeMouseDown('nw')} />
+                <div className="absolute -top-1 -right-1 w-4 h-4 cursor-ne-resize" onMouseDown={handleResizeMouseDown('ne')} />
+                <div className="absolute -bottom-1 -left-1 w-4 h-4 cursor-sw-resize" onMouseDown={handleResizeMouseDown('sw')} />
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 cursor-se-resize" onMouseDown={handleResizeMouseDown('se')} />
+              </>
+            )}
+
             {/* Title bar */}
-            <div className="flex items-center justify-between px-2 py-1 bg-charcoal">
+            <div 
+              className="flex items-center justify-between px-2 py-1 bg-gradient-to-r from-blue-800 to-blue-500 cursor-move select-none"
+              onMouseDown={handleTitleBarMouseDown}
+              onDoubleClick={toggleMaximize}
+            >
               <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-waterloo-gold flex items-center justify-center text-xs font-bold">⌨</div>
-                <span className="text-waterloo-gold font-mono text-sm font-bold tracking-wide">WatType!</span>
+                <div className="w-4 h-4 bg-waterloo-gold flex items-center justify-center text-xs font-bold rounded-sm">⌨</div>
+                <span className="text-white font-mono text-sm font-bold tracking-wide">WatType!</span>
               </div>
-              <button className="w-5 h-5 window-border-sm bg-steel-gray hover:bg-gray-400 flex items-center justify-center text-xs font-bold">
-                ✕
-              </button>
+              <div className="flex gap-1" onMouseDown={e => e.stopPropagation()}>
+                <button className="w-5 h-5 window-border-sm bg-steel-gray hover:bg-gray-300 flex items-center justify-center text-xs font-bold">
+                  _
+                </button>
+                <button 
+                  onClick={toggleMaximize}
+                  className="w-5 h-5 window-border-sm bg-steel-gray hover:bg-gray-300 flex items-center justify-center text-xs font-bold"
+                >
+                  {isMaximized ? '❐' : '□'}
+                </button>
+                <button 
+                  onClick={closeWindow}
+                  className="w-5 h-5 window-border-sm bg-red-500 hover:bg-red-600 flex items-center justify-center text-xs font-bold text-white"
+                >
+                  ✕
+                </button>
+              </div>
             </div>
 
             {/* Tab strip */}
-            <div className="flex gap-0 bg-steel-gray px-1 pt-1">
-              {[
-                "Basics",
-                "Practice",
-                "Words",
-                "Advanced",
-                "PROVERBS",
-                "History",
-                "Quotes",
-                "Long",
-                "Games",
-                "Stats",
-                "Payment",
-              ].map((tab) => (
+            <div className="flex gap-0 bg-steel-gray px-1 pt-1 flex-shrink-0">
+              {["Basics", "Practice", "Words", "Advanced", "PROVERBS", "History", "Quotes", "Long", "Games", "Stats"].map((tab) => (
                 <div
                   key={tab}
                   className={`px-3 py-1 text-xs font-mono ${
@@ -445,23 +429,20 @@ export default function TypingTest() {
             </div>
 
             {/* Content panel */}
-            <div className="window-inset bg-steel-gray p-4 m-2">
+            <div className="window-inset bg-steel-gray p-4 m-2 flex-1 overflow-auto flex flex-col">
               {/* Inner title strip */}
-              <div className="flex items-center justify-between px-3 py-1 bg-blue-900 text-white mb-3">
+              <div className="flex items-center justify-between px-3 py-1 bg-blue-900 text-white mb-3 flex-shrink-0">
                 <span className="font-mono text-sm font-bold">⌨ Short Writing Practice: Proverbs 1997</span>
                 <div className="flex items-center gap-4">
                   <span className="font-mono text-xs">[Number of Times: 0]</span>
                   <span className="font-mono text-sm font-bold">
                     {isFinished ? "Time's Up!" : hasStarted ? `${timeLeft}s` : "30s"}
                   </span>
-                  <button className="w-4 h-4 window-border-sm bg-steel-gray hover:bg-gray-400 flex items-center justify-center text-xs font-bold text-charcoal">
-                    ✕
-                  </button>
                 </div>
               </div>
 
               {/* Typing area */}
-              <div className="window-inset bg-off-white p-6 mb-4 min-h-[240px]">
+              <div className="window-inset bg-off-white p-6 mb-4 flex-1 overflow-auto">
                 <div className="font-mono text-lg leading-relaxed tracking-wide mb-4">{renderTargetText()}</div>
                 <div className="window-inset-thin bg-white">
                   <textarea
@@ -478,11 +459,9 @@ export default function TypingTest() {
               </div>
 
               {/* Bottom section with bars and results */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Left: Speed/Accuracy bars */}
+              <div className="grid grid-cols-2 gap-4 flex-shrink-0">
                 <div className="window-border bg-steel-gray p-3">
                   <div className="text-center font-mono text-sm font-bold mb-3 tracking-wide">Speed & Accuracy</div>
-
                   <div className="space-y-3">
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs w-20">Best Speed:</span>
@@ -492,7 +471,6 @@ export default function TypingTest() {
                         </div>
                       </div>
                     </div>
-
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs w-20">Current WPM:</span>
                       <div className="flex-1 window-inset-thin bg-white h-6 flex items-center">
@@ -504,7 +482,6 @@ export default function TypingTest() {
                         </div>
                       </div>
                     </div>
-
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-xs w-20">Accuracy:</span>
                       <div className="flex-1 window-inset-thin bg-white h-6 flex items-center">
@@ -519,18 +496,16 @@ export default function TypingTest() {
                   </div>
                 </div>
 
-                {/* Right: Results */}
                 <div className="window-border bg-steel-gray p-3">
                   <div className="text-center font-mono text-sm font-bold mb-3 tracking-wide">Results</div>
-
                   <div className="space-y-2 font-mono text-xs">
                     <div className="flex justify-between">
                       <span>Words Typed:</span>
                       <span className="font-bold">{typedWords.length} words</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Correct Keys:</span>
-                      <span className="font-bold">{correctWords} hits</span>
+                      <span>Correct Words:</span>
+                      <span className="font-bold">{correctWords} words</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Practice Time:</span>
@@ -549,41 +524,44 @@ export default function TypingTest() {
               </div>
 
               {/* Restart button */}
-              {(
-                <div className="mt-4 text-center">
-                  <button
-                    onClick={restart}
-                    className="window-border bg-steel-gray hover:bg-gray-400 px-6 py-2 font-mono text-sm font-bold"
-                  >
-                    Restart
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Footer language selector */}
-            <div className="flex items-center gap-2 px-3 py-1 bg-steel-gray border-t border-gray-400">
-              <span className="font-mono text-xs font-bold">English</span>
-              <button className="w-5 h-5 window-border-sm bg-gray-400 flex items-center justify-center text-xs">
-                ⌨
-              </button>
-              <button className="w-5 h-5 window-border-sm bg-gray-400 flex items-center justify-center text-xs">
-                -
-              </button>
-              <button className="w-5 h-5 window-border-sm bg-gray-400 flex items-center justify-center text-xs">
-                +
-              </button>
-              <span className="ml-auto font-mono text-xs">Zoom In / out</span>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div
-                    key={i}
-                    className={`w-3 h-3 ${i <= 2 ? "bg-blue-600" : i === 3 ? "bg-green-500" : "bg-gray-300"}`}
-                  />
-                ))}
+              <div className="mt-4 text-center flex-shrink-0">
+                <button
+                  onClick={restart}
+                  className="window-border bg-steel-gray hover:bg-gray-400 px-6 py-2 font-mono text-sm font-bold"
+                >
+                  Restart
+                </button>
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Windows XP Taskbar */}
+      <div className="bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 h-10 flex items-center px-1 border-t-2 border-blue-400 z-20">
+        <button className="flex items-center gap-2 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 text-white font-bold px-4 py-1 rounded-r-lg text-sm shadow-md border border-green-400">
+          <span className="text-lg">🪟</span>
+          <span>Start</span>
+        </button>
+
+        <div className="h-6 w-px bg-blue-400 mx-2" />
+
+        <div className="flex-1 flex items-center gap-1 px-2">
+          {isWindowOpen && (
+            <button 
+              className="flex items-center gap-2 bg-blue-900/80 hover:bg-blue-800 text-white px-3 py-1 text-xs font-mono min-w-[150px] border border-blue-400 rounded-sm"
+              onClick={() => inputRef.current?.focus()}
+            >
+              <span>⌨</span>
+              <span>WatType!</span>
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2 bg-blue-900/50 px-3 py-1 text-white text-xs font-mono border-l border-blue-400">
+          <span>🔊</span>
+          <span>🔌</span>
+          <span>{currentTime}</span>
         </div>
       </div>
     </div>

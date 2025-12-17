@@ -133,23 +133,13 @@
 
 /* Retro Windows 95 styling with 3D bevels and pixel-perfect borders */
 
-/* Desktop background with subtle noise texture */
+/* Desktop background - Windows XP Bliss wallpaper */
 .bg-desktop-bg {
-  background-color: #0a1a14;
-  background-image: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(255, 255, 255, 0.03) 2px,
-      rgba(255, 255, 255, 0.03) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(255, 255, 255, 0.03) 2px,
-      rgba(255, 255, 255, 0.03) 4px
-    );
+  background-image: url('/bliss.webp');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .bg-waterloo-gold {
