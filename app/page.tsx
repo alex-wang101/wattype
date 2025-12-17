@@ -544,10 +544,11 @@ export default function TypingTest() {
       {isLoginOpen && (
         <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/50">
           <div 
-            className="shadow-2xl"
+            className="shadow-2xl overflow-hidden"
             style={{
               width: '460px',
               border: '3px solid #0052cc',
+              borderRadius: '8px',
               fontFamily: 'Tahoma, Arial, sans-serif',
             }}
           >
