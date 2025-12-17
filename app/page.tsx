@@ -208,16 +208,22 @@ function generateWords(seed: number, count: number): string {
   return words.join(" ")
 }
 
+function checkifWordIsCorrect(typedWord: string, targetWord: string) {
+  return typedWord === targetWord
+}
+
 export default function TypingTest() {
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1000000))
   const [targetText, setTargetText] = useState("")
-  const [typedText, setTypedText] = useState("")
+  const [typedWords, setTypedWords] = useState<string[]>([])
+  const [currentWord, setCurrentWord] = useState("")
+  const [currentWordIndex, setCurrentWordIndex] = useState(0)
   const [timeLeft, setTimeLeft] = useState(30)
   const [isFinished, setIsFinished] = useState(false)
   const [hasStarted, setHasStarted] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const startTimeRef = useRef<number>(0)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
 
   // Initialize target text on mount
   useEffect(() => {
@@ -268,80 +274,109 @@ export default function TypingTest() {
       setHasStarted(true)
     }
 
-    // Cap input length to target text length
-    if (value.length <= targetText.length) {
-      setTypedText(value)
+    // If the last character is a space, save word and move to next
+    if (value.endsWith(" ")) {
+      const wordTyped = value.trim() // remove the space
+      setTypedWords((prev) => [...prev, wordTyped])
+      setCurrentWordIndex((prev) => prev + 1)
+      setCurrentWord("")
+      return
     }
+
+    // Update currentWord as user types
+    setCurrentWord(value)
   }
 
   const restart = useCallback(() => {
     const newSeed = Math.floor(Math.random() * 1000000)
     setSeed(newSeed)
-    setTypedText("")
+    setTypedWords([])
+    setCurrentWord("")
+    setCurrentWordIndex(0)
     setTimeLeft(30)
     setIsFinished(false)
     setHasStarted(false)
   }, [])
 
+  const targetWordsArray = targetText.split(" ")
+  
+  // Calculate stats based on completed words + current word
   const elapsedSeconds = hasStarted && !isFinished ? 30 - timeLeft : 30
-  const correctChars = typedText.split("").filter((char, i) => char === targetText[i]).length
-  const incorrectChars = typedText.length - correctChars
-  const charsTyped = typedText.length
+  
+  // Count correct characters across all typed words
+  let correctChars = 0
+  let totalChars = 0
+  
+  // Check completed words
+  for (let i = 0; i < typedWords.length; i++) {
+    const typed = typedWords[i]
+    const target = targetWordsArray[i] || ""
+    totalChars += typed.length + 1 // +1 for space
+    for (let j = 0; j < typed.length; j++) {
+      if (typed[j] === target[j]) correctChars++
+    }
+    // Count space as correct if word was completed
+    correctChars++
+  }
+  
+  // Check current word being typed
+  const currentTargetWord = targetWordsArray[currentWordIndex] || ""
+  for (let j = 0; j < currentWord.length; j++) {
+    totalChars++
+    if (currentWord[j] === currentTargetWord[j]) correctChars++
+  }
+  
+  const charsTyped = totalChars
   const accuracy = charsTyped > 0 ? (correctChars / charsTyped) * 100 : 0
   const wpm = elapsedSeconds > 0 ? correctChars / 5 / (elapsedSeconds / 60) : 0
-  const rawWpm = elapsedSeconds > 0 ? charsTyped / 5 / (elapsedSeconds / 60) : 0
 
-  const targetWords = targetText.split(" ")
-  const typedWords = typedText.split(" ")
   let correctWords = 0
   for (let i = 0; i < typedWords.length; i++) {
-    if (typedWords[i] === targetWords[i]) {
+    if (typedWords[i] === targetWordsArray[i]) {
       correctWords++
     }
   }
 
   const renderTargetText = () => {
-    const words = targetText.split(" ")
-    let charIndex = 0
-
-    return words.map((word, wordIndex) => {
-      const wordStart = charIndex
+    return targetWordsArray.map((word, wordIndex) => {
+      // Determine if this word has been typed, is current, or is upcoming
+      const isCompleted = wordIndex < currentWordIndex
+      const isCurrent = wordIndex === currentWordIndex
+      const typedWordForThis = isCompleted ? typedWords[wordIndex] : isCurrent ? currentWord : ""
+      
       const wordChars = word.split("").map((char, charIndexInWord) => {
-        const globalCharIndex = charIndex++
-        let className = "text-gray-500"
-
-        if (globalCharIndex < typedText.length) {
-          className = typedText[globalCharIndex] === targetText[globalCharIndex] ? "text-green-400" : "text-red-400"
+        let className = "text-gray-500" // default: not yet typed
+        
+        if (isCompleted || isCurrent) {
+          if (charIndexInWord < typedWordForThis.length) {
+            // Character has been typed
+            className = typedWordForThis[charIndexInWord] === char ? "text-green-400" : "text-red-400"
+          }
         }
-
-        const isCaret = globalCharIndex === typedText.length
+        
+        // Show caret at current typing position
+        const isCaret = isCurrent && charIndexInWord === currentWord.length
 
         return (
-          <span key={globalCharIndex} className={`relative ${className}`}>
+          <span key={charIndexInWord} className={`relative ${className}`}>
             {isCaret && <span className="absolute -left-[1px] top-0 bottom-0 w-[2px] bg-waterloo-gold animate-pulse" />}
             {char}
           </span>
         )
       })
 
-      // Add space
-      const spaceIndex = charIndex++
-      const spaceIsCaret = spaceIndex === typedText.length
-      const spaceClassName =
-        spaceIndex < typedText.length
-          ? typedText[spaceIndex] === " "
-            ? "text-green-400"
-            : "text-red-400"
-          : "text-gray-500"
+      // Show caret after word if user typed more chars than target word has
+      const caretAfterWord = isCurrent && currentWord.length >= word.length
 
       return (
         <span key={wordIndex}>
           {wordChars}
-          <span className={`relative ${spaceClassName}`}>
-            {spaceIsCaret && (
+          {caretAfterWord && (
+            <span className="relative">
               <span className="absolute -left-[1px] top-0 bottom-0 w-[2px] bg-waterloo-gold animate-pulse" />
-            )}{" "}
-          </span>
+            </span>
+          )}
+          <span className="text-gray-500"> </span>
         </span>
       )
     })
@@ -374,7 +409,7 @@ export default function TypingTest() {
             <div className="flex items-center justify-between px-2 py-1 bg-charcoal">
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-waterloo-gold flex items-center justify-center text-xs font-bold">⌨</div>
-                <span className="text-waterloo-gold font-mono text-sm font-bold tracking-wide">Typing Master</span>
+                <span className="text-waterloo-gold font-mono text-sm font-bold tracking-wide">WatType!</span>
               </div>
               <button className="w-5 h-5 window-border-sm bg-steel-gray hover:bg-gray-400 flex items-center justify-center text-xs font-bold">
                 ✕
@@ -416,6 +451,9 @@ export default function TypingTest() {
                 <span className="font-mono text-sm font-bold">⌨ Short Writing Practice: Proverbs 1997</span>
                 <div className="flex items-center gap-4">
                   <span className="font-mono text-xs">[Number of Times: 0]</span>
+                  <span className="font-mono text-sm font-bold">
+                    {isFinished ? "Time's Up!" : hasStarted ? `${timeLeft}s` : "30s"}
+                  </span>
                   <button className="w-4 h-4 window-border-sm bg-steel-gray hover:bg-gray-400 flex items-center justify-center text-xs font-bold text-charcoal">
                     ✕
                   </button>
@@ -428,7 +466,7 @@ export default function TypingTest() {
                 <div className="window-inset-thin bg-white">
                   <textarea
                     ref={inputRef}
-                    value={typedText}
+                    value={currentWord}
                     onChange={handleInputChange}
                     disabled={isFinished}
                     className="w-full h-20 bg-transparent font-mono text-base p-2 resize-none focus:outline-none"
@@ -488,11 +526,11 @@ export default function TypingTest() {
                   <div className="space-y-2 font-mono text-xs">
                     <div className="flex justify-between">
                       <span>Words Typed:</span>
-                      <span className="font-bold">{correctWords} words</span>
+                      <span className="font-bold">{typedWords.length} words</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Correct Keys:</span>
-                      <span className="font-bold">{correctChars} hits</span>
+                      <span className="font-bold">{correctWords} hits</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Practice Time:</span>
@@ -511,7 +549,7 @@ export default function TypingTest() {
               </div>
 
               {/* Restart button */}
-              {isFinished && (
+              {(
                 <div className="mt-4 text-center">
                   <button
                     onClick={restart}
