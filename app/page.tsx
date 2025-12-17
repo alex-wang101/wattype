@@ -45,6 +45,9 @@ function generateWords(seed: number, count: number): string {
 export default function TypingTest() {
   const [isWindowOpen, setIsWindowOpen] = useState(false)
   const [isMaximized, setIsMaximized] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [username, setUsername] = useState("")
+  const [password, setPassword] = useState("")
   const [seed, setSeed] = useState(() => Math.floor(Math.random() * 1000000))
   const [targetText, setTargetText] = useState("")
   const [typedWords, setTypedWords] = useState<string[]>([])
@@ -82,7 +85,7 @@ export default function TypingTest() {
   // Focus input when window opens
   useEffect(() => {
     if (isWindowOpen) {
-      inputRef.current?.focus()
+    inputRef.current?.focus()
     }
   }, [isWindowOpen, seed])
 
@@ -286,7 +289,7 @@ export default function TypingTest() {
       
       const wordChars = word.split("").map((char, charIndexInWord) => {
         let className = "text-gray-500"
-        
+
         if (isCompleted || isCurrent) {
           if (charIndexInWord < typedWordForThis.length) {
             className = typedWordForThis[charIndexInWord] === char ? "text-green-400" : "text-red-400"
@@ -311,7 +314,7 @@ export default function TypingTest() {
           {caretAfterWord && (
             <span className="relative">
               <span className="absolute -left-[1px] top-0 bottom-0 w-[2px] bg-waterloo-gold animate-pulse" />
-            </span>
+          </span>
           )}
           <span className="text-gray-500"> </span>
         </span>
@@ -407,8 +410,8 @@ export default function TypingTest() {
                   onClick={closeWindow}
                   className="w-5 h-5 window-border-sm bg-red-500 hover:bg-red-600 flex items-center justify-center text-xs font-bold text-white"
                 >
-                  ✕
-                </button>
+                ✕
+              </button>
               </div>
             </div>
 
@@ -525,11 +528,195 @@ export default function TypingTest() {
 
               {/* Restart button */}
               <div className="mt-4 text-center flex-shrink-0">
-                <button
-                  onClick={restart}
-                  className="window-border bg-steel-gray hover:bg-gray-400 px-6 py-2 font-mono text-sm font-bold"
+                  <button
+                    onClick={restart}
+                    className="window-border bg-steel-gray hover:bg-gray-400 px-6 py-2 font-mono text-sm font-bold"
+                  >
+                    Restart
+                  </button>
+                </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Windows XP Login Dialog */}
+      {isLoginOpen && (
+        <div className="absolute inset-0 flex items-center justify-center z-30 bg-black/50">
+          <div 
+            className="shadow-2xl"
+            style={{
+              width: '460px',
+              border: '3px solid #0052cc',
+              fontFamily: 'Tahoma, Arial, sans-serif',
+            }}
+          >
+            {/* Title bar - dark blue gradient */}
+            <div 
+              className="px-2 py-1 flex items-center justify-between"
+              style={{
+                background: 'linear-gradient(to right, #0a246a, #0052cc, #6699ff, #0052cc, #0a246a)',
+              }}
+            >
+              <span className="text-white font-bold text-xs tracking-wide">Log On to Windows</span>
+              <button
+                onClick={() => setIsLoginOpen(false)}
+                className="w-[21px] h-[21px] flex items-center justify-center text-white text-xs font-bold"
+                style={{
+                  background: 'linear-gradient(to bottom, #c85050, #b33a3a)',
+                  border: '1px solid #ffffff40',
+                  borderRadius: '3px',
+                  boxShadow: 'inset 1px 1px 0 #ff8080, inset -1px -1px 0 #802020',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Blue banner with Windows XP logo */}
+            <div 
+              className="relative overflow-hidden"
+              style={{
+                background: 'linear-gradient(to bottom, #3a6ea5, #6699ff 30%, #4a8cd8 70%, #2a5a8a)',
+                height: '90px',
+              }}
+            >
+              {/* Windows XP Logo - 4 color squares */}
+              <div className="absolute left-4 top-3 flex flex-col gap-[2px]">
+                <div className="flex gap-[2px]">
+                  <div style={{ width: '14px', height: '14px', backgroundColor: '#ff6b35', transform: 'skewX(-10deg)' }} />
+                  <div style={{ width: '14px', height: '14px', backgroundColor: '#52b552', transform: 'skewX(-10deg)' }} />
+                </div>
+                <div className="flex gap-[2px]">
+                  <div style={{ width: '14px', height: '14px', backgroundColor: '#0052cc', transform: 'skewX(-10deg)' }} />
+                  <div style={{ width: '14px', height: '14px', backgroundColor: '#ffb81c', transform: 'skewX(-10deg)' }} />
+                </div>
+              </div>
+
+              {/* Microsoft Windows XP text */}
+              <div className="absolute left-12 top-2 flex items-baseline">
+                <span className="text-white/80 text-[10px] mr-1" style={{ fontFamily: 'Arial, sans-serif' }}>Microsoft</span>
+                <span className="text-white font-bold text-[28px] tracking-tight" style={{ fontFamily: 'Arial, sans-serif', textShadow: '1px 1px 2px rgba(0,0,0,0.3)' }}>Windows</span>
+                <span className="text-white font-light text-[18px] ml-0.5" style={{ fontFamily: 'Arial, sans-serif', fontStyle: 'italic' }}>xp</span>
+              </div>
+              
+              {/* Professional x64 Edition */}
+              <div className="absolute left-[52px] top-[38px]">
+                <span className="text-white text-[13px]" style={{ fontFamily: 'Arial, sans-serif' }}>Professional x64 Edition</span>
+              </div>
+
+              {/* Copyright text - bottom left */}
+              <div className="absolute left-2 bottom-1 text-white/70 text-[9px]" style={{ fontFamily: 'Tahoma, sans-serif' }}>
+                <div>Copyright © 1985-2005</div>
+                <div>Microsoft Corporation</div>
+              </div>
+
+              {/* Microsoft italic text - bottom right */}
+              <div className="absolute right-3 bottom-2">
+                <span className="text-white/90 text-[11px] italic font-bold" style={{ fontFamily: 'Arial, sans-serif' }}>Microsoft</span>
+              </div>
+            </div>
+
+            {/* Form area - light gray with 3D inset border */}
+            <div 
+              style={{
+                backgroundColor: '#c0c0c0',
+                borderTop: '2px solid #808080',
+                padding: '20px 24px',
+              }}
+            >
+              <div className="space-y-3">
+                <div className="flex items-center gap-3">
+                  <label 
+                    className="text-[11px] text-black"
+                    style={{ width: '70px', fontFamily: 'Tahoma, sans-serif' }}
+                  >
+                    User name:
+                  </label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="flex-1 text-[11px] px-1 py-[2px] focus:outline-none"
+                    style={{
+                      fontFamily: 'Tahoma, sans-serif',
+                      border: '1px solid #7f9db9',
+                      backgroundColor: 'white',
+                    }}
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <label 
+                    className="text-[11px] text-black"
+                    style={{ width: '70px', fontFamily: 'Tahoma, sans-serif' }}
+                  >
+                    Password:
+                  </label>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="flex-1 text-[11px] px-1 py-[2px] focus:outline-none"
+                    style={{
+                      fontFamily: 'Tahoma, sans-serif',
+                      border: '1px solid #7f9db9',
+                      backgroundColor: 'white',
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Buttons row */}
+              <div className="flex justify-center gap-[6px] mt-6">
+                <button 
+                  onClick={() => setIsLoginOpen(false)}
+                  className="text-[11px] px-4 py-[3px] min-w-[75px] focus:outline-none"
+                  style={{
+                    fontFamily: 'Tahoma, sans-serif',
+                    backgroundColor: '#ece9d8',
+                    border: '1px solid #003c74',
+                    borderRadius: '3px',
+                    boxShadow: 'inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080, 0 0 0 1px #0054e3',
+                  }}
                 >
-                  Restart
+                  OK
+                </button>
+                <button 
+                  onClick={() => setIsLoginOpen(false)}
+                  className="text-[11px] px-4 py-[3px] min-w-[75px] focus:outline-none"
+                  style={{
+                    fontFamily: 'Tahoma, sans-serif',
+                    backgroundColor: '#ece9d8',
+                    border: '1px solid #aca899',
+                    borderRadius: '3px',
+                    boxShadow: 'inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080',
+                  }}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="text-[11px] px-3 py-[3px] focus:outline-none"
+                  style={{
+                    fontFamily: 'Tahoma, sans-serif',
+                    backgroundColor: '#ece9d8',
+                    border: '1px solid #aca899',
+                    borderRadius: '3px',
+                    boxShadow: 'inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080',
+                  }}
+                >
+                  Shut Down...
+                </button>
+                <button 
+                  className="text-[11px] px-3 py-[3px] focus:outline-none"
+                  style={{
+                    fontFamily: 'Tahoma, sans-serif',
+                    backgroundColor: '#ece9d8',
+                    border: '1px solid #aca899',
+                    borderRadius: '3px',
+                    boxShadow: 'inset 1px 1px 0 #ffffff, inset -1px -1px 0 #808080',
+                  }}
+                >
+                  Options &lt;&lt;
                 </button>
               </div>
             </div>
@@ -539,7 +726,10 @@ export default function TypingTest() {
 
       {/* Windows XP Taskbar */}
       <div className="bg-gradient-to-r from-blue-800 via-blue-600 to-blue-800 h-10 flex items-center px-1 border-t-2 border-blue-400 z-20">
-        <button className="flex items-center gap-2 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 text-white font-bold px-4 py-1 rounded-r-lg text-sm shadow-md border border-green-400">
+        <button 
+          onClick={() => setIsLoginOpen(true)}
+          className="flex items-center gap-2 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-400 hover:to-green-600 text-white font-bold px-4 py-1 rounded-r-lg text-sm shadow-md border border-green-400"
+        >
           <span className="text-lg">🪟</span>
           <span>Start</span>
         </button>
